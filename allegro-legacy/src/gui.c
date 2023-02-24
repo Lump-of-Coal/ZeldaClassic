@@ -348,13 +348,13 @@ int object_message(DIALOG *dialog, int msg, int c)
 //       else
 // 	 scare_mouse_area(dialog->x, dialog->y, dialog->w, dialog->h);
 
-      acquire_screen();
+      // acquire_screen();
    }
 
    ret = dialog->proc(msg, dialog, c);
 
    if (msg == MSG_DRAW) {
-      release_screen();
+      // release_screen();
       // unscare_mouse();
    }
 
