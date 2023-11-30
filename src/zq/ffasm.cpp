@@ -1197,6 +1197,9 @@ script_command command_list[NUMCOMMANDS+1]=
 	{ "WRAPRADIANS", 0, 0, 0, 0 },
 	{ "WRAPDEGREES", 0, 0, 0, 0 },
 
+	{ "CALLFUNC", 1, 1, 0, 0 },
+	{ "RETURNFUNC", 0, 0, 0, 0 },
+
 	{ "", 0, 0, 0, 0 }
 };
 

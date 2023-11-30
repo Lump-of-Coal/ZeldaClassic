@@ -47,7 +47,7 @@ class TestZEditor(unittest.TestCase):
             sys.executable,
             root_dir / 'tests/run_replay_tests.py',
             '--build_folder', run_target.get_build_folder(),
-            '--test_results', output_dir,
+            '--test_results', output_dir, '--no_console',
             *args,
         ]
         shutil.rmtree(output_dir, ignore_errors=True)

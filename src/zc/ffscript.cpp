@@ -601,6 +601,7 @@ string *sargstr;
 refInfo *ri = NULL;
 script_data *curscript = NULL;
 int32_t(*stack)[MAX_SCRIPT_REGISTERS] = NULL;
+bounded_vec<word, int32_t>* ret_stack;
 vector<int32_t> zs_vargs;
 ScriptType curScriptType;
 word curScriptNum;
@@ -619,6 +620,7 @@ static vector<string*> sargstr_cache;
 static vector<refInfo*> ricache;
 static vector<script_data*> sdcache;
 static vector<int32_t(*)[MAX_SCRIPT_REGISTERS]> stackcache;
+static vector<bounded_vec<word, int32_t>*> ret_stack_cache;
 void push_ri()
 {
 	sarg1cache.push_back(sarg1);
@@ -631,6 +633,7 @@ void push_ri()
 	ricache.push_back(ri);
 	sdcache.push_back(curscript);
 	stackcache.push_back(stack);
+	ret_stack_cache.push_back(ret_stack);
 }
 void pop_ri()
 {
@@ -644,6 +647,7 @@ void pop_ri()
 	ri = ricache.back(); ricache.pop_back();
 	curscript = sdcache.back(); sdcache.pop_back();
 	stack = stackcache.back(); stackcache.pop_back();
+	ret_stack = ret_stack_cache.back(); ret_stack_cache.pop_back();
 }
 
 //START HELPER FUNCTIONS
@@ -28237,6 +28241,21 @@ int32_t sz_int_arr(const int32_t ptr)
 //                                       ASM Functions                                                 //
 ///----------------------------------------------------------------------------------------------------//
 
+void retstack_push(int32_t val)
+{
+	if(ri->retsp >= ret_stack->size())
+	{
+		Z_scripterrlog("RetStack over or underflow, retstack pointer = %ld\n", ri->retsp);
+		return;
+	}
+	ret_stack->at(ri->retsp++) = val;
+}
+optional<int32_t> retstack_pop()
+{
+	if(!ri->retsp)
+		return nullopt; //return from root, so, QUIT
+	return ret_stack->at(--ri->retsp);
+}
 
 void stack_push(int32_t val)
 {
@@ -35273,62 +35292,63 @@ int32_t run_script_int(bool is_jitted)
 	int32_t i = curScriptIndex;
 
 	int commands_run = 0;
-	if (is_jitted) goto j_command;
-
-	if(ri->waitframes)
+	bool old_script_funcrun = script_funcrun && curscript->meta.ffscript_v < 23;
+	if(!is_jitted)
 	{
-		--ri->waitframes;
-		return RUNSCRIPT_OK;
-	}
-	zs_vargs.clear();
-	
-#ifdef _FFDISSASSEMBLY
-	
-	if(curscript->zasm[ri->pc].command != 0xFFFF)
-	{
-#ifdef _FFONESCRIPTDISSASSEMBLY
-		zc_trace_clear();
-#endif
-		
-		switch(type)
+		if(ri->waitframes)
 		{
-		case ScriptType::FFC:
-			al_trace("\nStart of FFC script %i processing on FFC %i:\n", script, i);
-			break;
-			
-		case ScriptType::Item:
-			al_trace("\nStart of item script %i processing:\n", script);
-			break;
-			
-		case ScriptType::Global:
-			al_trace("\nStart of global script %I processing:\n", script);
-			break;
+			--ri->waitframes;
+			return RUNSCRIPT_OK;
 		}
-	}
-	
-#endif
-	
-	if( FFCore.zasm_break_mode == ZASM_BREAK_ADVANCE_SCRIPT || FFCore.zasm_break_mode == ZASM_BREAK_SKIP_SCRIPT )
-	{
-		if( zasm_debugger )
+		zs_vargs.clear();
+		
+	#ifdef _FFDISSASSEMBLY
+		
+		if(curscript->zasm[ri->pc].command != 0xFFFF)
 		{
-			//Halt on new script if set to advance to next script
-			FFCore.zasm_break_mode = ZASM_BREAK_HALT;
+	#ifdef _FFONESCRIPTDISSASSEMBLY
+			zc_trace_clear();
+	#endif
+			
+			switch(type)
+			{
+			case ScriptType::FFC:
+				al_trace("\nStart of FFC script %i processing on FFC %i:\n", script, i);
+				break;
+				
+			case ScriptType::Item:
+				al_trace("\nStart of item script %i processing:\n", script);
+				break;
+				
+			case ScriptType::Global:
+				al_trace("\nStart of global script %I processing:\n", script);
+				break;
+			}
+		}
+		
+	#endif
+		
+		if( FFCore.zasm_break_mode == ZASM_BREAK_ADVANCE_SCRIPT || FFCore.zasm_break_mode == ZASM_BREAK_SKIP_SCRIPT )
+		{
+			if( zasm_debugger )
+			{
+				//Halt on new script if set to advance to next script
+				FFCore.zasm_break_mode = ZASM_BREAK_HALT;
+				FFCore.TraceScriptIDs(true);
+				coloured_console.safeprint((CConsoleLoggerEx::COLOR_RED | 
+					CConsoleLoggerEx::COLOR_BACKGROUND_BLACK),"Breaking for script start\n");
+			}
+			else FFCore.zasm_break_mode = ZASM_BREAK_NONE;
+		}
+		else if( zasm_debugger && !(SKIPZASMPRINT()))
+		{
+			//Print new script metadata when starting script
 			FFCore.TraceScriptIDs(true);
 			coloured_console.safeprint((CConsoleLoggerEx::COLOR_RED | 
-				CConsoleLoggerEx::COLOR_BACKGROUND_BLACK),"Breaking for script start\n");
+				CConsoleLoggerEx::COLOR_BACKGROUND_BLACK),"Start of script\n");
 		}
-		else FFCore.zasm_break_mode = ZASM_BREAK_NONE;
 	}
-	else if( zasm_debugger && !(SKIPZASMPRINT()))
-	{
-		//Print new script metadata when starting script
-		FFCore.TraceScriptIDs(true);
-		coloured_console.safeprint((CConsoleLoggerEx::COLOR_RED | 
-			CConsoleLoggerEx::COLOR_BACKGROUND_BLACK),"Start of script\n");
-	}
-
-j_command:
+	//j_command
 	bool is_debugging = script_debug_is_runtime_debugging() == 2;
 	bool increment = true;
 	word scommand = curscript->zasm[ri->pc].command;
@@ -35630,6 +35650,39 @@ j_command:
 					increment = false;
 				}
 				break;
+			
+			case CALLFUNC:
+			{
+				retstack_push(ri->pc+1);
+				if(sarg1 < 0 )
+				{
+					goto_err("CALLFUNC");
+					scommand = 0xFFFF;
+					break;
+				}
+				ri->pc = sarg1;
+				increment = false;
+				break;
+			}
+			case RETURNFUNC:
+			{
+				if(auto retpc = retstack_pop())
+				{
+					if(*retpc < 0)
+					{
+						goto_err("RETURNFUNC");
+						scommand = 0xFFFF;
+						break;
+					}
+					ri->pc = *retpc;
+					increment = false;
+				}
+				else //Returned from 'void run()', QUIT
+				{
+					scommand = 0xFFFF;
+				}
+				break;
+			}
 				
 			case LOOP:
 			{
@@ -35648,7 +35701,7 @@ j_command:
 			case RETURN:
 			{
 				if (script_funcrun)
-					break; //handled below
+					break; //handled below, poorly. 'RETURNFUNC' does this better now.
 				ri->pc = SH::read_stack(ri->sp) - 1;
 				++ri->sp;
 				ri->sp &= MASK_SP;
@@ -39652,12 +39705,12 @@ j_command:
 		}
 		if (ri->sp >= MAX_SCRIPT_REGISTERS)
 		{
-			if (script_funcrun)
+			if (old_script_funcrun)
 				return RUNSCRIPT_OK;
 			Z_scripterrlog("Stack over/underflow caused by command %d!\n", scommand);
 		}
 		if(hit_invalid_zasm) break;
-		if(script_funcrun && (ri->pc == MAX_PC || scommand == RETURN))
+		if(old_script_funcrun && (ri->pc == MAX_PC || scommand == RETURN))
 			return RUNSCRIPT_OK;
 
 #ifdef _SCRIPT_COUNTER
@@ -39674,13 +39727,16 @@ j_command:
 				return RUNSCRIPT_OK;
 			}
 		}
-		if(increment)	ri->pc++;
-		else			increment = true;
-		if ( ri->pc == MAX_PC ) //rolled over from overflow?
+		if(scommand != 0xFFFF)
 		{
-			Z_scripterrlog("Script PC overflow! Too many ZASM lines?\n");
-			ri->pc = 0;
-			scommand = 0xFFFF;
+			if(increment)	ri->pc++;
+			else			increment = true;
+			if ( ri->pc == MAX_PC ) //rolled over from overflow?
+			{
+				Z_scripterrlog("Script PC overflow! Too many ZASM lines?\n");
+				ri->pc = 0;
+				scommand = 0xFFFF;
+			}
 		}
 		
 		if(earlyretval > -1) //Should this be below the 'commands_run += 1'? Unsure. -Em
@@ -45893,6 +45949,9 @@ script_command ZASMcommands[NUMCOMMANDS+1]=
 
 	{ "WRAPRADIANS", 1, 0, 0, 0 },
 	{ "WRAPDEGREES", 1, 0, 0, 0 },
+
+	{ "CALLFUNC", 1, 1, 0, 0 },
+	{ "RETURNFUNC", 0, 0, 0, 0 },
 
 	{ "", 0, 0, 0, 0 }
 };

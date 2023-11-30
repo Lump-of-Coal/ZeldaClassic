@@ -486,7 +486,7 @@ unique_ptr<IntermediateData> ScriptParser::generateOCode(FunctionData& fdata)
 				{
 					Function* destructor = destr[0];
 					first.reset(new OSetImmediate(new VarArgument(EXP1),
-						new LabelArgument(destructor->getLabel())));
+						new LabelArgument(destructor->getLabel(), true)));
 				}
 				else first.reset(new OSetImmediate(new VarArgument(EXP1),
 					new LiteralArgument(0)));
@@ -544,7 +544,7 @@ unique_ptr<IntermediateData> ScriptParser::generateOCode(FunctionData& fdata)
 				addOpcode2(funccode, new OSetRegister(new VarArgument(EXP1), new VarArgument(CLASS_THISKEY)));
 				addOpcode2(funccode, new OPopRegister(new VarArgument(CLASS_THISKEY)));
 			}
-			addOpcode2(funccode, new OReturn());
+			addOpcode2(funccode, new OReturnFunc());
 			function.giveCode(funccode);
 		}
 		else
@@ -641,24 +641,8 @@ unique_ptr<IntermediateData> ScriptParser::generateOCode(FunctionData& fdata)
 				addOpcode2(funccode, new OPopArgsRegister(new VarArgument(NUL),
 					new LiteralArgument(stackSize)));
 			else addOpcode2(funccode, new ONoOp());
-			
-			//if it's a main script, quit.
-			if (isRun)
-			{
-				// Note: the stack still contains the "this" pointer
-				// But since the script is about to terminate, we don't
-				// care about popping it off.
-				addOpcode2(funccode, new OQuit());
-			}
-			else
-			{
-				// Not a script's run method, so no "this" pointer to
-				// pop off. The top of the stack is now the function
-				// return address (pushed on by the caller).
-				//pop off the return address
-				//and return
-				addOpcode2(funccode, new OReturn());
-			}
+		
+			addOpcode2(funccode, new OReturnFunc());
 			
 			function.giveCode(funccode);
 		}
@@ -728,16 +712,11 @@ void ScriptParser::assemble(IntermediateData *id)
 			//Function call the run function
 			//push the stack frame pointer
 			addOpcode2(ginit, new OPushRegister(new VarArgument(SFRAME)));
-			//push the return address
-			int32_t returnaddr = ScriptParser::getUniqueLabelID();
-			addOpcode2(ginit, new OPushImmediate(new LabelArgument(returnaddr)));
 			
 			int32_t funcaddr = ScriptParser::getUniqueLabelID();
-			addOpcode2(ginit, new OGotoImmediate(new LabelArgument(funcaddr)));
+			addOpcode2(ginit, new OCallFunc(new LabelArgument(funcaddr, true)));
 			
-			Opcode *next = new OPopRegister(new VarArgument(SFRAME));
-			next->setLabel(returnaddr);
-			addOpcode2(ginit,next);
+			addOpcode2(ginit,new OPopRegister(new VarArgument(SFRAME)));
 			
 			//Add the function to the end of the script, as a special copy
 			bool didlabel = false;
@@ -747,7 +726,7 @@ void ScriptParser::assemble(IntermediateData *id)
 				Opcode* op = it->get();
 				if(dynamic_cast<OQuit*>(op))
 				{
-					op = new OReturn(); //Replace 'Quit();' with 'return;'
+					op = new OReturnFunc(); //Replace 'Quit();' with 'return;'
 				}
 				else
 					op = op->makeClone(true);
@@ -759,10 +738,10 @@ void ScriptParser::assemble(IntermediateData *id)
 				addOpcode2(ginit_mergefuncs, op);
 			}
 			Opcode* last = ginit_mergefuncs.back().get();
-			if(OReturn* opcode = dynamic_cast<OReturn*>(last))
+			if(OReturnFunc* opcode = dynamic_cast<OReturnFunc*>(last))
 				; //function ends in a return already
 			else
-				addOpcode2(ginit_mergefuncs, new OReturn());
+				addOpcode2(ginit_mergefuncs, new OReturnFunc());
 		}
 	}
 	addOpcode2(ginit, new OQuit());
