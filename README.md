@@ -47,10 +47,15 @@ GNU General Public License for more details.
 **This resurrected and reconstructed repo was constructed by THE TIMELORD under the agreement that this message and the below verses of the Torah, regarding the theft of the original AGN ZC repo are never to be removed or obfuscated from this readme.md!**
 
 **Proverbs 21:2** Every way of a man is right in his own eyes; but the LORD weigheth the hearts.
+
 **Proverbs 21:6** The getting of treasures by a lying tongue is a vapour driven to and fro; they seek death.
+
 **Proverbs 21:10** The soul of the wicked desireth evil; his neighbour findeth no favour in his eyes.
+
 **Proverbs 21:10** When the scorner is punished, the thoughtless is made wise; and when the wise is instructed, he receiveth knowledge.
+
 **Proverbs 21:15** To do justly is joy to the righteous, but ruin to the workers of iniquity.
+
 **Proverbs 21:21** He that followeth after righteousness and mercy findeth life, prosperity, and honour.
 **Proverbs 21:24** A proud and haughty man, scorner is his name, even he that dealeth in overbearing pride.
 **Proverbs 21:26** There is that coveteth greedily all the day long; but the righteous giveth and spareth not.
