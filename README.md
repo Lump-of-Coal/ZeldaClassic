@@ -2,7 +2,9 @@
 
 Zelda Classic is an engine for making games similar to the original Famicom/NES 'Legend of Zelda' title from 1986, but can be used to create anything from that to a wholly custom game engine , much like commercial software such as PICO-8 or Gamemaker. The packages include the custom, C, C, Pascal, and Ruby-inspired, powerful scripting language: ZScript, that allows you to directly modify the game engine to the limits of your imagination, creativity, and programming expertise. 
 
-To learn more about Zelda Classic, and to download over 21 years of existing Quests (our term for custom games), please vitit our website at:: [zeldaclassic.com](https://zeldaclassic.com)
+Originally created in 1999 by Jeremy (a.k.a. Phantom Menace) Craner as an experiment in C-, Zelda Classic evolved into a much beloved game engine that allows its users to create custom NES/Famicom to SNES/SFC style action RPG games, on par with many released commercially. Now it is open source, updated for modern hardware, and you too can now benefit from it, creating anything from a hobbyist bit of fun, to a fully commercial title!
+
+To learn more about Zelda Classic, or to download over 21 years of existing 'Quests' (our term for custom games), please vitit our website at:: [zeldaclassic.com](https://zeldaclassic.com)
 
 To get the latest release versions and builds of our software, check out the Releases section on GitHub, or visit us at:
 [Latest Downloads](https://www.zeldaclassic.com/downloads/)
