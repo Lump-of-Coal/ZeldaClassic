@@ -1,20 +1,22 @@
-# ZQuest Classic
+ # Zelda Classic
 
-ZQuest Classic is an engine for making games similar to the original NES Zelda.
+Zelda Classic is an engine for making games similar to the original Famicom/NES 'Legend of Zelda' title from 1986, but can be used to create anything from that to a wholly custom game engine , much like commercial software such as PICO-8 or Gamemaker. The packages include the custom, C, C, Pascal, and Ruby-inspired, powerful scripting language: ZScript, that allows you to directly modify the game engine to the limits of your imagination, creativity, and programming expertise. 
 
-Website: [zquestclassic.com](https://zquestclassic.com)
+To learn more about Zeolda Classic, and to download over 21 years of existing Quests (our term for custom games), please vitit our website at:: [zeldaclassic.com](https://zeldaclassic.com)
 
-[Latest Downloads](https://zquestclassic.com/releases/)
+To get the latest release versions and builds of our software, check out the Releases section on GitHub, or visit us at:
+[Latest Downloads](https://www.zeldaclassic.com/downloads/)
 
-[Our Discord](https://discord.gg/ddk2dk4guq)
+If you are on Discord and wish to chat with other users, developers, and staff, you can join us here:
+[Official ZC Discord](https://discord.gg/VQwSs3DAjM)
 
-We support Windows (Win7+), OSX (12+), and Linux. There is also an experimental [web version](https://zquestclassic.com/play/) that can also be played on mobile devices.
+We support Windows (Win7+), OSX (12+), and Linux. <!--There is also an experimental [web version](https://zquestclassic.com/play/) that can also be played on mobile devices.--!>
 
 ## Development
 
-See [`docs/building.md`](./docs/building.md).
+For information on contributing to this project, please read: [`docs/building.md`](./docs/building.md).
 
-ZQuest Classic builds Allegro 5 from source. The code base still uses Allegro 4 APIs, but uses [Allegro-Legacy](https://github.com/NewCreature/Allegro-Legacy) to translate into Allegro 5.
+Zelda Classic builds Allegro 5 from source. The code base still uses Allegro 4 APIs, but uses [Allegro-Legacy](https://github.com/NewCreature/Allegro-Legacy) to translate into Allegro 5.
 
 The compiled binaries require a number of resource files to be available at runtime. By default, building the project will copy those files to the correct location. They will only be copied if they do not already exist–so you can modify these files (like the various `.cfg` files) in your build directory to your liking. To completely refresh the resources file, build the `copy_resources` target (ex: `cmake --build build -t copy_resources`)
 
@@ -28,22 +30,22 @@ python3 tests/run_replay_tests.py --filter tests/replays/classic_1st.zplay
 
 See [`docs/replays.md`](./docs/replays.md) for more.
 
-## Contributing to ZQuest Classic
+## Contributing to Zelda Classic
 
-We encourage third-party submission of patches and new features! If you're interesting in contributing to ZQuest Classic's development, please read the CONTRIBUTE file.
+We encourage third-party submission of patches and new features! If you're interesting in contributing to Zelda Classic's development, please read the CONTRIBUTE file.
 
 ## License
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU General Public License v3, as published by
+the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
+## Special Thanks
 **This resurrected and reconstructed repo was constructed by THE TIMELORD under the agreement that this message and the below verses of the Torah, regarding the theft of the original AGN ZC repo are never to be removed or obfuscated from this readme.md!**
 
 **Proverbs 21:2** Every way of a man is right in his own eyes; but the LORD weigheth the hearts.
