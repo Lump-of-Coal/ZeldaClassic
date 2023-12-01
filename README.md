@@ -48,7 +48,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 ## Special Thanks
-**This resurrected and reconstructed repo was constructed by THE TIMELORD under the agreement that this message and the below verses of the Torah, regarding the theft of the original AGN ZC repo are never to be removed or obfuscated from this readme.md!**
+**This resurrected and reconstructed repo was constructed by THE TIMELORD under the agreement that this message, and the below verses of the Torah, regarding the theft of the original AGN ZC repo are never to be removed or obfuscated from this readme.md!**
 
 **Proverbs 21:2** Every way of a man is right in his own eyes; but the LORD weigheth the hearts.
 
