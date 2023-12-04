@@ -1,9 +1,10 @@
 Some prerequisites to building from source:
 
-- CMake (**3.24** or later)
+- CMake (**3.24** or later).
 - A C++ Compiler that supports **C++20**.
-- Install flexbison (Windows, use https://chocolatey.org/: `choco install winflexbison3`)
-- For Windows: Visual Studio 2019 (but later is better)
+- Install flexbison (Windows, use https://chocolatey.org/: `choco install winflexbison3`).
+- For Windows: Visual Studio 2019 (but later is better).
+- For Linux/Unix, GCC-8.
 
 # Configuring the build
 
