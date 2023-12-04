@@ -1,0 +1,40 @@
+## Source list for ZQuest ZScript module, when Flex and Bison are available
+set(ZQUEST_ZSCRIPT_SOURCES
+
+################################
+# Add or remove files here
+################################
+src/parser/AST.cpp
+src/parser/ASTVisitors.cpp
+src/parser/BuildVisitors.cpp
+src/parser/CompileError.cpp
+src/parser/DataStructs.cpp
+src/parser/Library.cpp
+src/parser/LibraryHelper.cpp
+src/parser/Opcode.cpp
+src/parser/Scope.cpp
+src/parser/ScriptParser.cpp
+src/parser/SemanticAnalyzer.cpp
+src/parser/Types.cpp
+src/parser/ZScript.cpp
+
+src/parser/libraries/Audio.cpp
+src/parser/libraries/Debug.cpp
+src/parser/libraries/EWeapon.cpp
+src/parser/libraries/Ffc.cpp
+src/parser/libraries/Game.cpp
+src/parser/libraries/Global.cpp
+src/parser/libraries/ItemClass.cpp
+src/parser/libraries/Item.cpp
+src/parser/libraries/Link.cpp
+src/parser/libraries/LWeapon.cpp
+src/parser/libraries/NpcClass.cpp
+src/parser/libraries/Npc.cpp
+src/parser/libraries/Screen.cpp
+
+src/scripting/ZAsmCommands.cpp
+src/scripting/ZAsmVariables.cpp
+
+## End of ZQuest ZScript module
+)
+

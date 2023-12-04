@@ -1,0 +1,22 @@
+## Source list for Romview GUI module
+set(ROMVIEW_GUI_SOURCES
+
+################################
+# Add or remove files here
+################################
+
+src/backend/Backend.cpp
+src/backend/GraphicsBackend.cpp
+src/backend/MouseBackend.cpp
+src/backend/PaletteBackend.cpp
+src/backend/SFXBackend.cpp
+src/editbox.cpp 
+src/EditboxModel.cpp 
+src/EditboxView.cpp 
+src/gui.cpp 
+src/jwin.cpp
+src/jwinfsel.cpp 
+src/tab_ctl.cpp
+
+## End of Romview GUI module
+)
