@@ -1,6 +1,6 @@
  # Zelda Classic
 
-Zelda Classic is an engine for making games similar to the original Famicom/NES '_Legend of Zelda_', ('_Zelda no Densetsu_') title from 1986, but can be used to create anything from that, to a wholly custom game engine, much in the same way that commercial software such as **PICO-8** or **Gamemaker** allows you to construct a game of your _own devices_, but far more easily: The packages include the custom, C, C, Pascal, and Ruby-inspired, powerful scripting language: **ZScript**, that allows you to directly modify the game engine to the limits of your imagination, creativity, and programming expertise. 
+Zelda Classic is an engine for making games similar to the original Famicom/NES '_Legend of Zelda_', ('_Zelda no Densetsu_', 「ゼルダの伝説」) title from 1986, but can be used to create anything from that, to a wholly custom game engine, much in the same way that commercial software such as **PICO-8** or **Gamemaker** allows you to construct a game of your _own devices_, but far more easily: The packages include the custom, C, C, Pascal, and Ruby-inspired, powerful scripting language: **ZScript**, that allows you to directly modify the game engine to the limits of your imagination, creativity, and programming expertise. 
 
 For most basic game creation, all tasks are handled by the _JWin _user interface in graphical, instantaneous, and easily editable means. All items, power-ups, enemies, and other facets of a game are something that_ you can designate and customise using the base editor alone!_ Should you want more, the ZScript interface language, with the included tools and compiler, allows you to modify some of the deepest innerworkings of the engine, to tailor it to your specific needs.
 
@@ -50,7 +50,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 ## Special Thanks
-**This resurrected and reconstructed repo was constructed by _THE TIMELORD_ under the agreement that this message, and the below verses of the Torah, regarding the theft of the original AGN ZC repo are never to be removed or obfuscated from this readme.md!**
+**This resurrected and reconstructed repo was constructed by _THE TIMELORD_ under the agreement that this message, and the below verses of the Tanakh _Ketuvim_, regarding the theft of the original AGN ZC repo are never to be removed or obfuscated from this readme.md!**
 
 **Proverbs 21:2** Every way of a man is right in his own eyes; but the LORD weigheth the hearts.
 
